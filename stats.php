@@ -76,7 +76,7 @@ $foo = getOverallGames();
 echo "<h2>Spiele gesamt:</h2>";
 for ($i=0;$i<sizeof($foo);$i++)
 {
-	echo "<div class='number'>$foo[$i]</div><div class='number'>$foo[$i]</div>";
+	echo "<div class='number'>$foo[$i]</div>";
 }
 echo "</div>";
 // footer
