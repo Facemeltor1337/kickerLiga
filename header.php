@@ -4,7 +4,7 @@ header('Content-type: text/html; charset=utf-8');
 ?>
 <?php
 
-echo "<html><title>TT-KickerLiga</title><link rel='stylesheet' type='text/css' href='styleMe.css'>";
+echo "<html><title>TT-KickerLiga</title><link rel='stylesheet' type='text/css' href='styleMe.css'><link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>";
 echo "<div id='header'><div id='title'>TraceTronic Kicker-Liga Ingolstadt</div><div id='logo'><a href='index.php'><img src='img/logo.png' width='100px'></a></div><div id='menu'>
 <a href='index.php'><img title='Übersicht' src='img/home.png'></a> 
 <a href='add_game.php'><img width='40px' title='Spiel eintragen' src='img/add_game.png'></a>
@@ -17,4 +17,5 @@ echo "<div id='features'><a href='https://maxx.piratenpad.de/kicker' alt='Featur
 
 echo "</div>";
 
+echo "<div id='container'>";
 ?>

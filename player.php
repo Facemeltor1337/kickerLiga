@@ -84,15 +84,17 @@ var myLineChart = new Chart(ctx2).Line(
 };</script>
 <?php
 echo "<div id='main'>";
-echo "<h2>$nickname</h2>";
-echo "<h4>Spiele insgesamt: $nrGames</h4>";
+echo "<h1>Spieler: $nickname</h1>";
+echo "<h3>Spiele insgesamt: $nrGames</h3>";
 $ratio = getWinRatio($playerID);
-echo "<h4>Siegquote: $ratio %</h4>";
+echo "<h3>Siegquote: $ratio %</h3>";
 $temp = getAbwehrSturm($playerID);
 $abwehr = $temp[0];
 $sturm = $temp[1];
-echo "<h4>Abwehr/Sturm: $abwehr / $sturm</h4>";
+echo "<h3>Abwehr/Sturm: $abwehr / $sturm</h3>";
 $fav = getFavPlayer($playerID);
-echo "<h4>Spielt am häufigsten in einem Team mit: $fav</h4>";
+echo "<h3>Spielt am häufigsten in einem Team mit: $fav</h3>";
 echo "</div>";
+// footer
+include ('footer.php');
 ?>

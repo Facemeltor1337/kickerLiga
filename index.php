@@ -10,10 +10,10 @@ include('kickerLib.php');
 
 //now add the main area
 echo "<div id='main'>";
-echo "<div id='ueber'>Letzten 10 Spiele</div>";
+echo "<h1>Letzte 10 Spiele</h1>";
 $sql_te = mysql_query("SELECT id FROM games ORDER BY Id DESC LIMIT 10");
 $check_name = mysql_num_rows($sql_te);
-echo "<table><tr bgcolor='#ed8b00'><td width='300px'>Team 1</td><td width='100px'>Ergebnis</td><td width='300px'>Team 2</td><td width='200px'>Datum</td><td>Details</td></tr>";
+echo "<table><tr class='tablehead'><td width='300px'>Team 1</td><td width='100px'>Ergebnis</td><td width='300px'>Team 2</td><td width='200px'>Datum</td><td>Details</td></tr>";
  // we need some empty vars
 $nickname2_2 = '';
 $nickname1_1 = '';
@@ -48,7 +48,7 @@ for ($i=0;$i<$check_name;$i++)
 		{
 			echo " / <a href='player.php?id=$player1_1'>$nickname1_1</a>";
 		}
-		echo "</td><td><img src='/img/$data[0]_small.png'><img src='/img/$data[1]_small.png'></td><td><a href='player.php?id=$player2'>$nickname2</a>";
+		echo "</td><td><div class='number'>$data[0]</div> : <div class='number'>$data[1]</div></td><td><a href='player.php?id=$player2'>$nickname2</a>";
 		if ($nickname2_2 != '')
 		{
 			echo " / <a href='player.php?id=$player2_2'>$nickname2_2</a>";
@@ -65,7 +65,7 @@ echo "</table>";
 echo "</div>";
 //now add the left side panel
 echo "<div id='rightSide'>";
-echo "<div id='ueber'>Spieler</div>";
+echo "<h2>Spieler</h2>";
 $playerList = getAllPlayerID();
 for ($i=0;$i<sizeof($playerList);$i++)
 {
@@ -74,5 +74,6 @@ for ($i=0;$i<sizeof($playerList);$i++)
 
 }
 echo "</div>";
-
+// footer
+include ('footer.php');
 ?>

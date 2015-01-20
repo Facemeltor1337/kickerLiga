@@ -21,7 +21,8 @@ else
 
 if ($status != 'add')
 {
-	echo "<div id='main'>Neuen Spieler hinzufügen<br>";
+	echo "<div id='main'>";
+        echo "<h1>Neuen Spieler hinzufügen</h1>";
 	//Hole nun die Daten der Spieler
 	echo "<form action='add_player.php' method='get'>";
 	echo "<input name='status' value='add' type='hidden'>";
@@ -48,5 +49,6 @@ echo "<br>Gehe <a href=javascript:history.back()>zurück</a> und versuche es ern
 echo "</div>";
 }
 
-
+// footer
+include ('footer.php');
 ?>

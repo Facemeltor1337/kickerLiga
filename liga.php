@@ -7,6 +7,12 @@ error_reporting(E_ALL);
 include ('header.php');
 include ('kickerLib.php');
 
-echo "<div id='main'>tbd</div>";
+echo "<div id='main'>";
+echo "<h1>Liga-Modus</h1>";
+echo "tbd";
+echo "</div>";
+
+// footer
+include ('footer.php');
 
 ?>

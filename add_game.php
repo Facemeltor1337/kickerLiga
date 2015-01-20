@@ -20,7 +20,8 @@ else
 
 if ($status != 'add')
 {
-echo "<div id='main'>Ein Spiel hinzufügen:<br>";
+echo "<div id='main'>";
+echo "<h1>Ein Spiel hinzufügen:</h1>";
 //Hole nun die Daten der Spieler
 ?>
     <form action='add_game.php' method='post'>
@@ -118,4 +119,7 @@ echo "<br>Gehe <a href=javascript:history.back()>zurück</a> und versuche es ern
 echo "</div>";
 
 }
+
+// footer
+include ('footer.php');
 ?>

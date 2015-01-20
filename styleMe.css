@@ -1,74 +1,114 @@
 body
 {
-	background-color: #63666a;
+    background-color: #d5dbe4;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 12px;
+    margin: 0px;
+}
+
+* {
+    box-sizing: border-box;
 }
 
 a {
-	color: #005f6a;
+    color: #005f6a;
+}
+a:hover {
+    color: #0095a6;
 }
 
 #header {
-height: 130px;
-background-color: #ed8b00;	
-font-family:fantasy;
-font-size: 30px;
+    height: 130px;
+    background-color: #ed8b00;
+    font-size: 30px;
 }
-
+#footer {
+    clear: both;
+}
 #title {
-	position: absolute;
-	left: 150px;
-	top: 15px; 
+    position: absolute;
+    left: 150px;
+    top: 15px; 
 }
 
 #menu {
-	position: absolute;
-	margin-left: 150px;
-	top: 67px;
-	font-size: 15px;
+    position: absolute;
+    margin-left: 150px;
+    top: 67px;
+    font-size: 15px;
 
 }
 
 
 #logo {
-position: absolute;
-float: left;
-left: 15px; 
-top: 15px;	
+    position: absolute;
+    float: left;
+    left: 15px; 
+    top: 15px;	
 }
 
-
-#main {
-	position: absolute;
-	border: 4px dotted #ed8b00;
-	width: 60%;
-	top: 150px;
-	padding: 3px;
+#container {
+    padding: 20px 10px 0px 10px;
+    width:100%;
+}
+#main,#rightSide {
+    width: 60%;
+    padding: 10px 20px;
+    background-color: #CFD5DE;
+    float: left;
+    border: 1px solid #bbc1c9;
 }
 #rightSide {
-	position: absolute;
-	border: 4px dotted #ed8b00;
-	width: 35%;
-	left: 63.6%;	
-	top: 150px;
-	padding: 3px;	
+    width: 35%;
+    float: right;
 }
 
 #ueber {
-	background-color: #ED8B00;
-	margin-bottom: 5px;
+    background-color: #ED8B00;
+    margin-bottom: 5px;
+    padding: 3px;
 }
 
 #features {
-	position: absolute;
-	left:90%;
-	top:1%;
-	font-family:fantasy;
-	font-size: 15px;
+    position: absolute;
+    left:90%;
+    top:1%;
+    font-family:fantasy;
+    font-size: 15px;
 }
 
 table {
-	border: 1px solid #ed8b00;
+    font-size: 12px;
 }
 
-
-
+.tablehead td {
+    background-color: #63666A;
+    color: #FFF;
+}
+td {
+    background-color: #c2c8d0;
+    padding: 3px;
+}
+.number,.numberbig {
+    min-width: 24px;
+    min-height: 24px;
+    margin-left: 2px;
+    margin-right: 2px;
+    border-radius: 3px;
+    vertical-align: middle;
+    display: inline-block;
+    background-color: #63666A;
+    color: #FFF;
+    text-align: center;
+    font-weight: bold;
+    font-size: 16px;
+}
+.numberbig {
+    min-width: 48px;
+    min-height: 48px;
+    border-radius: 5px;
+    font-size: 32px;
+}
+.scorecard {
+    border: 1px solid #63666A;
+}

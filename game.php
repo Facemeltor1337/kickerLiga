@@ -33,17 +33,15 @@ $score2 = $data[1];
 
 //gimme now the output of this game
 echo "<div id='main'>";
-echo "<h2>Ergebnis ($date)</h2><table><tr><td width='200px'><h3>Team1</h3><a href='player.php?id=$player1'>$nickname1</a><br>";
+echo "<h1>Spielergebnis ($date)</h1><table><tr><td width='200px'><h3>Team1</h3><a href='player.php?id=$player1'>$nickname1</a><br>";
 if ($player1_1 != 0)
 {
 	echo "<a href='player.php?id=$player1_1'>$nickname1_1</a>";
 }
 echo "</td><td>";
-//add score1 icon now
-echo "<img src='img/numbers-$score1-filled-icon.png'>";
+echo "<div class='numberbig'>$score1</div>";
 echo "</td><td>";
-//add score2 icon now
-echo "<img src='img/numbers-$score2-filled-icon.png'>";
+echo "<div class='numberbig'>$score2</div>";
 echo "</td><td width='200px' align='right'><h3>Team2</h3><a href='player.php?id=$player2'>$nickname2</a><br>";
 if ($player2_2 != 0)
 {
@@ -80,7 +78,7 @@ for ($i=0;$i<sizeof($moreGames);$i++)
 	{
 		echo "/ <a href='player.php?id=$player1_1'>$nickname1_1</a>";
 	}
-	echo "</td><td><img src='/img/$data[0]_small.png'></td><td><img src='/img/$data[1]_small.png'></td>";
+	echo "</td><td><div class='number'>$data[0]</div></td><td><div class='number'>$data[1]</div></td>";
 	echo "<td>Team2: <a href='player.php?id=$player2'>$nickname2</a>";
 	if ($player2_2 != 0)
 	{ 
@@ -90,5 +88,6 @@ for ($i=0;$i<sizeof($moreGames);$i++)
 	echo "</tr>";
 }
 echo "</table></div>";
-
+// footer
+include ('footer.php');
 ?>
