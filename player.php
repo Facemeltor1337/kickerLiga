@@ -85,15 +85,16 @@ var myLineChart = new Chart(ctx2).Line(
 <?php
 echo "<div id='main'>";
 echo "<h1>Spieler: $nickname</h1>";
-echo "<h3>Spiele insgesamt: $nrGames</h3>";
+echo "<h4>Spielstatistik</h4><table><tr><td width='100px'></td><td width='100px'>Gesamt</td><td width='100px'>Abwehr</td><td width='100px'>Sturm</td></tr>";
 $ratio = getWinRatio($playerID);
-echo "<h3>Siegquote: $ratio %</h3>";
 $temp = getAbwehrSturm($playerID);
-$abwehr = $temp[0];
-$sturm = $temp[1];
-echo "<h3>Abwehr/Sturm: $abwehr / $sturm</h3>";
+$abwehr = $temp[0][0];
+$sturm = $temp[1][0];
+echo "<tr><td>Spiele</td><td>$nrGames</td><td>$abwehr</td><td>$sturm</td></tr>";
+echo "<tr><td>Spiegquote</td><td>$ratio[0] %</td><td>$ratio[1] %</td><td>$ratio[2] %</td></tr>";
+echo "</table>";
 $fav = getFavPlayer($playerID);
-echo "<h3>Spielt am häufigsten in einem Team mit: $fav</h3>";
+echo "<h4>Spielt am häufigsten in einem Team mit: <a href='player.php?id=$fav[1]'>$fav[0]</a></h4>";
 echo "</div>";
 // footer
 include ('footer.php');
