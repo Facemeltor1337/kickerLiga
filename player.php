@@ -94,7 +94,15 @@ echo "<tr><td>Spiele</td><td>$nrGames</td><td>$abwehr</td><td>$sturm</td></tr>";
 echo "<tr><td>Spiegquote</td><td>$ratio[0] %</td><td>$ratio[1] %</td><td>$ratio[2] %</td></tr>";
 echo "</table>";
 $fav = getFavPlayer($playerID);
-echo "<h4>Spielt am häufigsten in einem Team mit: <a href='player.php?id=$fav[1]'>$fav[0]</a></h4>";
+echo "<h4>Spielt am häufigsten in einem Team mit: <a href='player.php?id=$fav[1]'>$fav[0] ($fav[2])</a></h4>";
+echo "<table><tr><td width='100px'></td><td width='100px'>Tore</td><td width='100px'>Gegentore</td></tr>";
+echo "<tr><td>Anzahl</td><td>$wins_looses[2]</td><td>$wins_looses[3]</td></tr>"; 
+$toreGame = $wins_looses[2] / $nrGames;
+$toreGame = round($toreGame, 2);
+$gegentoreGame = $wins_looses[3] / $nrGames;
+$gegentoreGame = round($gegentoreGame, 2);
+echo "<tr><td>pro Spiel</td><td>$toreGame</td><td>$gegentoreGame</td></tr>";
+echo "</table>";
 echo "</div>";
 // footer
 include ('footer.php');

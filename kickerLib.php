@@ -15,11 +15,26 @@ function getAllPlayerID()
 	return $listPlayer;
 }
 
+function getNumberOfPlayer()
+{
+	$sql_te = mysql_query("SELECT * FROM players");
+	$check_name = mysql_num_rows($sql_te);
+
+	return $check_name;
+}
+
 function getPlayerNick($id)
 {
 	$sql_player1 = mysql_query("SELECT * FROM players where id='$id'");
 	$nick = mysql_result($sql_player1,0, "Nickname");
 	return $nick;
+}
+
+function getPlayerID($name)
+{
+	$sql_player1 = mysql_query("SELECT * FROM players where Nickname='$name'");
+	$id = mysql_result($sql_player1,0, "id");
+	return $id;	
 }
 
 function getNumberOfGamesByPlayer($id)
@@ -54,6 +69,8 @@ function getWinsAndLoose($id)
 	$n = mysql_num_rows($sql_player1);
 	$win = 0;
 	$loose = 0;
+	$goodGoals = 0;
+	$badGoals = 0;
 	for ($i=0;$i<$n;$i++)
 	{
 	$play1 = mysql_result($sql_player1,$i, "player_1");
@@ -67,10 +84,14 @@ function getWinsAndLoose($id)
 		if ($score1 > $score2)
 		{
 			$win += 1;
+			($score1);
+			$goodGoals += $score1; 
+			
 		}		
 		else
 		{
 			$loose +=1;
+			$badGoals += $score2;
 		}
 	}
 	else
@@ -78,15 +99,17 @@ function getWinsAndLoose($id)
 		if ($score1 < $score2)
 		{
 			$win += 1;
+			$goodGoals += $score2;
 		}		
 		else
 		{
 			$loose +=1;
+			$badGoals += $score1;
 		}
 	}
 
 	}
-	return array($win, $loose);
+	return array($win, $loose, $goodGoals, $badGoals);
 }
 
 function getGameDetails($id)
@@ -113,7 +136,7 @@ function listPlayerAsList()
 	{
 			$v_id_sel = mysql_result($sql_te,$i, "id");
 			$v_name_sel = getPlayerNick($v_id_sel);
-			echo "<option value = '$v_id_sel'>$v_name_sel</option>";
+			echo "<option>$v_name_sel</option>";
 	}
 }
 
@@ -257,7 +280,7 @@ function getFavPlayer($id)
 			continue;
 		}		
 	}
-	return array(getPlayerNick($most), $most);
+	return array(getPlayerNick($most), $most, $biggest);
 	
 }
 
@@ -350,7 +373,15 @@ function getAbwehrSturm($id)
 	return array(array($abwehr, $awins, $aloose), array($sturm, $swins, $sloose));
 }
 
-
+function getLigaInfo($id)
+{
+	$sql_player1 = mysql_query("SELECT * FROM liga where id='$id'");
+	$name = mysql_result($sql_player1,0, "name");
+	$text = mysql_result($sql_player1,0, "text");
+	$status = mysql_result($sql_player1,0, "status");
+	
+	return array($name, $text, $status);
+}
 
 ?>
 

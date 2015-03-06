@@ -23,26 +23,24 @@ if ($status != 'add')
 echo "<div id='main'>";
 echo "<h1>Ein Spiel hinzufügen:</h1>";
 //Hole nun die Daten der Spieler
+$nrPlayer = getNumberOfPlayer();
 ?>
+	<datalist id="PlayerIDs">
+		<?php 
+		listPlayerAsList();
+		?>
+	</datalist>
     <form action='add_game.php' method='post'>
        <input name='status' value='add' type='hidden'>
        <fieldset>
           <legend>Team1</legend>
           <p>
              <label>Abwehr</label>
-             <select name = "t1s1" required size='10' autofocus>
-		<?php 
-		$foo = listPlayerAsList();
-		?>
-             </select>
+             <input type="text" name="t1s1" list="PlayerIDs" size='20' required>
              <label>Sturm</label>
-             <select name = "t1s2" size='10'>
-		<?php 
-		$foo = listPlayerAsList();
-		?>
-             </select>
+             <input type="text" name="t1s2" list="PlayerIDs" size='20' required>
 	     <label>Tore</label>
-             <select name = "t1score" size='11' required>
+             <select name = "t1score" required>
  		<option value="0">0</option>
  		<option value="1">1</option>
 		<option value="2">2</option>
@@ -61,19 +59,11 @@ echo "<h1>Ein Spiel hinzufügen:</h1>";
           <legend>Team2</legend>
           <p>
              <label>Abwehr</label>
-             <select name = "t2s1" required size='10'>
-		<?php 
-		$foo = listPlayerAsList();
-		?>
-             </select>
+             <input type="text" name="t2s1" list="PlayerIDs" size='20' required>
              <label>Sturm</label>
-             <select name = "t2s2" size='10'>
-		<?php 
-		$foo = listPlayerAsList();
-		?>
-             </select>
+             <input type="text" name="t2s2" list="PlayerIDs" size='20' required>
 	     <label>Tore</label>
-             <select name = "t2score" size='11' required>
+             <select name = "t2score"required>
  		<option value="0">0</option>
  		<option value="1">1</option>
 		<option value="2">2</option>
@@ -96,11 +86,11 @@ echo "</div>";
 }
 else
 {
-$t1s1 = $_POST['t1s1'];
-$t1s2 = $_POST['t1s2'];
+$t1s1 = getPlayerID($_POST['t1s1']);
+$t1s2 = getPlayerID($_POST['t1s2']);
 $t1score = $_POST['t1score'];
-$t2s1 = $_POST['t2s1'];
-$t2s2 = $_POST['t2s2'];
+$t2s1 = getPlayerID($_POST['t2s1']);
+$t2s2 = getPlayerID($_POST['t2s2']);
 $t2score = $_POST['t2score'];
 
 $sql123 = mysql_query("INSERT INTO games (date, player_1, player1_1, score1, player_2, player2_2, score2)   VALUES(now(), '$t1s1', '$t1s2', '$t1score', '$t2s1', '$t2s2', '$t2score')") or die (mysql_error());
