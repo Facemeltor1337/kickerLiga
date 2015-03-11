@@ -95,8 +95,8 @@ function getWinsAndLoose($id)
 	}
 	else
 	{
-		$goodGoals += $score1; 		
-		$badGoals += $score2;
+		$goodGoals += $score2; 		
+		$badGoals += $score1;
 		if ($score1 < $score2)
 		{
 			$win += 1;
