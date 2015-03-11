@@ -109,7 +109,16 @@ echo "<br>Gehe <a href=javascript:history.back()>zurück</a> und versuche es ern
 echo "</div>";
 
 }
+echo "<div id='rightSide'>";
+echo "<h2>Spieler</h2>";
+$playerList = getAllPlayerID();
+for ($i=0;$i<sizeof($playerList);$i++)
+{
+		$v_name_sel = getPlayerNick($playerList[$i]);
+		echo "<a href='player.php?id=$playerList[$i]'>$v_name_sel</a><br>";
 
+}
+echo "</div>";
 // footer
 include ('footer.php');
 ?>
