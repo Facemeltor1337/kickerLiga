@@ -82,7 +82,8 @@ function getWinsAndLoose($id)
 	if ($play1 == $id or $play1_1 == $id)
 	{
 		//if the player is in team 1, than add score 1 good and score2 badgoals
-
+		$goodGoals += $score1; 		
+		$badGoals += $score2;
 		if ($score1 > $score2)
 		{
 			$win += 1;
