@@ -81,30 +81,28 @@ function getWinsAndLoose($id)
 	$score2 = mysql_result($sql_player1,$i, "score2");
 	if ($play1 == $id or $play1_1 == $id)
 	{
+		//if the player is in team 1, than add score 1 good and score2 badgoals
+
 		if ($score1 > $score2)
 		{
 			$win += 1;
-			($score1);
-			$goodGoals += $score1; 
-			
 		}		
 		else
 		{
 			$loose +=1;
-			$badGoals += $score2;
 		}
 	}
 	else
 	{
+		$goodGoals += $score1; 		
+		$badGoals += $score2;
 		if ($score1 < $score2)
 		{
 			$win += 1;
-			$goodGoals += $score2;
 		}		
 		else
 		{
 			$loose +=1;
-			$badGoals += $score1;
 		}
 	}
 
