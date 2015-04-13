@@ -382,5 +382,93 @@ function getLigaInfo($id)
 	return array($name, $text, $status);
 }
 
+
+//get all teams now
+function getTeams()
+{
+	//try to get all teams now and ofc we name the array foo
+	$foo = array();
+	
+	$sql_player1 = mysql_query("SELECT * FROM games");
+	$n = mysql_num_rows($sql_player1);		
+	for($i=0;$i<$n;$i++)
+	{
+			$play1 = mysql_result($sql_player1,$i, "player_1");
+			$play1_1 = mysql_result($sql_player1,$i, "player1_1");
+            $play2 = mysql_result($sql_player1,$i, "player_2");
+			$play2_2 = mysql_result($sql_player1,$i, "player2_2");
+
+			if (sizeof($foo) == 0)
+			{
+				$foo[] = array($play1, $play1_1, 1);
+				$foo[] = array($play2, $play2_2, 1);
+				continue;
+			}		
+			$foundTeam = 0;
+			//check if team1 exists
+			for($j=0;$j<sizeof($foo);$j++)
+			{
+				if ($foo[$j][0] == $play1 and $foo[$j][1] == $play1_1)
+				{
+					$games =  $foo[$j];
+					$games = $games[2];
+					$games = $games + 1;
+					$foo[$j] = array($play1, $play1_1, $games);
+					$foundTeam = 1;
+					break;
+				}
+				if ($foo[$j][0] == $play1_1 and $foo[$j][1] == $play1)
+				{
+					$games =  $foo[$j];
+					$games = $games[2];
+					$games = $games + 1;
+					$foo[$j] = array($play1_1, $play1, $games);
+					$foundTeam = 1;
+					break;
+				}
+			}//end team 1
+			if ($foundTeam == 0)
+			{
+					$foo[] = array($play1, $play1_1, 1);	
+
+			}
+			$foundTeam = 0;		
+			for($j=0;$j<sizeof($foo);$j++)
+			{					
+				if ($foo[$j][0] == $play2 and $foo[$j][1] == $play2_2)
+				{
+					$games =  $foo[$j];
+					$games = $games[2];
+					$games = $games + 1;
+					$foo[$j] = array($play2, $play2_2, $games);
+					$foundTeam = 1;
+					$whichTeam = 2;
+					break;
+				}
+				if ($foo[$j][0] == $play2_2 and $foo[$j][1] == $play2)
+				{
+					$games =  $foo[$j];
+					$games = $games[2];
+					$games = $games + 1;
+					$foo[$j] = array($play2_2, $play2, $games);
+					$foundTeam = 1;
+					$whichTeam = 2;
+					break;
+				}	
+			}//end team2
+			if ($foundTeam == 0)
+			{
+				$foo[] = array($play2, $play2_2, 1);
+
+			}			
+
+	} //end games loop
+	
+	return $foo;
+}
+
+
+
+
 ?>
 
