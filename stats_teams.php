@@ -31,11 +31,12 @@ echo "<h1>Statistik Teams</h1>";
 echo '  <div id="tabContainer">
     <div id="tabs">
       <ul>
-        <li id="tabHeader_1">Gesamt</li>      
+        <li id="tabHeader_1">Siegquopte</li>     
+        <li id="tabHeader_2">Spiele</li>      
       </ul>
     </div><div id="tabscontent">';
 
-echo '<div class="tabpage" id="tabpage_4">';
+echo '<div class="tabpage" id="tabpage_1">';
 $teams = getTeams();
 $temp_teams = $teams;
 //store for sidebar
@@ -65,7 +66,8 @@ for($i=0;$i<sizeof($teams);$i++)
 	echo "<tr><td><a href='player.php?id=$player1_id'>$player1</a> / <a href='player.php?id=$player2_id'>$player2</a></td><td>$ratio %</td></tr>";
 }
 echo "</table>";
-
+echo "</div>";
+echo '<div class="tabpage" id="tabpage_2">';
 echo "<h3>Meiste Spiele Teams</h3><table><tr class='tablehead'><td width='300'>Team</td><td width='100'>Spiele im Team</td></tr>";	
 $counter = array();
 
