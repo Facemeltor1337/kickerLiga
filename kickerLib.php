@@ -363,14 +363,15 @@ function getTeams()
 			//check if team1 exists
 			for($j=0;$j<sizeof($foo);$j++)
 			{
-				if ($foo[$j][0] == $play1 and $foo[$j][1] == $play1_1)
+				$currentRow = $foo[$j];
+				if ($currentRow[0] == $play1 and $currentRow[1] == $play1_1)
 				{
 					//add one to games
-					$games =  $foo[$j];
+					$games =  $currentRow;
 					$games = $games[2];
 					$games = $games + 1;
 					//add wins now
-					$wins = $foo[$j];
+					$wins = $currentRow;
 					$wins = $wins[3];
 					if ($score1 > $score2)
 					{
@@ -381,13 +382,13 @@ function getTeams()
 					$foundTeam = 1;
 					break;
 				}
-				if ($foo[$j][0] == $play1_1 and $foo[$j][1] == $play1)
+				if ($currentRow[0] == $play1_1 and $currentRow[1] == $play1)
 				{
-					$games =  $foo[$j];
+					$games =  $currentRow;
 					$games = $games[2];
 					$games = $games + 1;
 					//add wins now
-					$wins = $foo[$j];
+					$wins = $currentRow;
 					$wins = $wins[3];
 					if ($score1 > $score2)
 					{
@@ -416,13 +417,14 @@ function getTeams()
 			$foundTeam = 0;		
 			for($j=0;$j<sizeof($foo);$j++)
 			{					
-				if ($foo[$j][0] == $play2 and $foo[$j][1] == $play2_2)
+				$currentRow = $foo[$j];
+				if ($currentRow[0] == $play2 and $currentRow[1] == $play2_2)
 				{
-					$games =  $foo[$j];
+					$games =  $currentRow;
 					$games = $games[2];
 					$games = $games + 1;
 					//add wins now
-					$wins = $foo[$j];
+					$wins = $currentRow;
 					$wins = $wins[3];
 					if ($score1 < $score2)
 					{
@@ -433,13 +435,13 @@ function getTeams()
 					$whichTeam = 2;
 					break;
 				}
-				if ($foo[$j][0] == $play2_2 and $foo[$j][1] == $play2)
+				if ($currentRow[0] == $play2_2 and $currentRow[1] == $play2)
 				{
-					$games =  $foo[$j];
+					$games =  $currentRow;
 					$games = $games[2];
 					$games = $games + 1;
 					//add wins now
-					$wins = $foo[$j];
+					$wins = $currentRow;
 					$wins = $wins[3];
 					if ($score1 < $score2)
 					{

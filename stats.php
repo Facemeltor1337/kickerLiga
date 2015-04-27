@@ -120,12 +120,13 @@ $temp_teams = $teams;
 $maxTeams = sizeof($teams);
 
 $counter = array();
+$counter2 = array();
 foreach ($teams as $key => $row)
 {
 	$temp = $row[3] / $row[2] * 100;
 	$temp = round($temp, 2);		
     $counter[$key] = $temp;
-
+	$counter2[$key] = $row[2];
 }
 array_multisort($counter, SORT_DESC, $teams);
 echo "<h3>TopTeams bei Siegquote</h3><table><tr class='tablehead'><td width='300'>Team</td><td width='100'>Gewonnen im Team</td></tr>";
@@ -146,14 +147,7 @@ echo "</table>";
 echo "<h3>Meiste Spiele Teams</h3><table><tr class='tablehead'><td width='300'>Team</td><td width='100'>Spiele im Team</td></tr>";	
 $counter = array();
 
-foreach ($temp_teams as $key => $row)
-{
-    $counter[$key] = $row[2];
-}
-
-array_multisort($counter, SORT_DESC, $temp_teams);
-
-
+array_multisort($counter2, SORT_DESC, $temp_teams);
 for($i=0;$i<sizeof($temp_teams);$i++)
 {
 	$player1 = getPlayerNick($temp_teams[$i][0]);
