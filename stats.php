@@ -125,14 +125,6 @@ for ($i=0;$i<sizeof($foo);$i++)
 {
 	echo "<div class='number'>$foo[$i]</div>";
 }
-echo "<h2>Verschiedene Teams:</h2>";
-$temp = (string)$maxTeams;
-$maxTeams = str_split($temp);
-for ($i=0;$i<sizeof($maxTeams);$i++)
-{
-	echo "<div class='number'>$maxTeams[$i]</div>";
-}
-
 echo "</div>";
 // footer
 include ('footer.php');
