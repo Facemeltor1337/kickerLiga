@@ -114,21 +114,21 @@ foreach ($playerOfense as $key => $val) {
 }
 echo "</table></div>";
 echo '<div class="tabpage" id="tabpage_4">';
-echo "<h3>Meiste Spiele Teams</h3><table><tr class='tablehead'><td width='300'>Team</td><td width='100'>Spiele im Team</td></tr>";	
 $teams = getTeams();
+$temp_teams = $teams;
 //store for sidebar
 $maxTeams = sizeof($teams);
 
 $counter = array();
-
 foreach ($teams as $key => $row)
 {
-    $counter[$key] = $row[2];
+	$temp = $row[3] / $row[2] * 100;
+	$temp = round($temp, 2);		
+    $counter[$key] = $temp;
+
 }
-
 array_multisort($counter, SORT_DESC, $teams);
-
-
+echo "<h3>TopTeams bei Siegquote</h3><table><tr class='tablehead'><td width='300'>Team</td><td width='100'>Gewonnen im Team</td></tr>";
 for($i=0;$i<sizeof($teams);$i++)
 {
 	$player1 = getPlayerNick($teams[$i][0]);
@@ -136,9 +136,38 @@ for($i=0;$i<sizeof($teams);$i++)
 	$player2 = getPlayerNick($teams[$i][1]);
 	$player2_id = $teams[$i][1];
 	$games = $teams[$i][2];
+	$wins = $teams[$i][3];
+	$ratio = $wins / $games * 100;
+	$ratio = round($ratio, 2);
+	echo "<tr><td><a href='player.php?id=$player1_id'>$player1</a> / <a href='player.php?id=$player2_id'>$player2</a></td><td>$ratio %</td></tr>";
+}
+echo "</table>";
+
+echo "<h3>Meiste Spiele Teams</h3><table><tr class='tablehead'><td width='300'>Team</td><td width='100'>Spiele im Team</td></tr>";	
+$counter = array();
+
+foreach ($temp_teams as $key => $row)
+{
+    $counter[$key] = $row[2];
+}
+
+array_multisort($counter, SORT_DESC, $temp_teams);
+
+
+for($i=0;$i<sizeof($temp_teams);$i++)
+{
+	$player1 = getPlayerNick($temp_teams[$i][0]);
+	$player1_id = $temp_teams[$i][0];
+	$player2 = getPlayerNick($temp_teams[$i][1]);
+	$player2_id = $temp_teams[$i][1];
+	$games = $temp_teams[$i][2];
 	echo "<tr><td><a href='player.php?id=$player1_id'>$player1</a> / <a href='player.php?id=$player2_id'>$player2</a></td><td>$games</td></tr>";
 }
-echo "</table></div>";
+echo "</table>";
+
+
+
+echo "</div>";
 echo "</div></div>"; //end tabContainer
 
 echo "</div>"; //end main

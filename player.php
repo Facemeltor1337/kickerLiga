@@ -93,8 +93,46 @@ $sturm = $temp[1][0];
 echo "<tr><td>Spiele</td><td>$nrGames</td><td>$abwehr</td><td>$sturm</td></tr>";
 echo "<tr><td>Spiegquote</td><td>$ratio[0] %</td><td>$ratio[1] %</td><td>$ratio[2] %</td></tr>";
 echo "</table>";
-$fav = getFavPlayer($playerID);
-echo "<h4>Spielt am häufigsten in einem Team mit: <a href='player.php?id=$fav[1]'>$fav[0] ($fav[2])</a></h4>";
+echo "<h3>Team-Statistiken</h3>";
+echo "<h4>Spielt am meisten mit</h4>";
+//now lets print the teampartners
+$teams = getTeams();
+echo "<table><tr><td width='150px'>Spielpartner</td><td width='100px'>Spiele</td></tr>";
+$temp_dict = array();
+$temp_ratio = array();
+for($i=0;$i<sizeof($teams);$i++)
+{
+	if($teams[$i][0] == $playerID)
+	{
+		$partner_id = $teams[$i][1];
+		$temp_dict[$partner_id] = $teams[$i][2];
+		$temp_ratio[$partner_id] = $teams[$i][3] / $teams[$i][2] * 100;
+	}
+	if ($teams[$i][1] == $playerID)
+	{
+		$partner_id = $teams[$i][0];
+		$temp_dict[$partner_id] = $teams[$i][2];
+		$temp_ratio[$partner_id] = $teams[$i][3] / $teams[$i][2] * 100;
+	}	
+}
+
+arsort($temp_dict);
+arsort($temp_ratio);
+foreach ($temp_dict as $key => $val) {
+	$partner = getPlayerNick($key);
+	echo "<tr><td><a href='player.php?id=$key'>$partner</a></td><td>$val</td></tr>";
+}
+echo "</table>";
+echo "<h4>Spielt am besten mit</h4>";
+echo "<table><tr><td width='150px'>Spielpartner</td><td width='100px'>Siegquote</td></tr>";
+foreach ($temp_ratio as $key => $val) {
+	$partner = getPlayerNick($key);
+	$ratio = round($val, 2);
+	echo "<tr><td><a href='player.php?id=$key'>$partner</a></td><td>$ratio %</td></tr>";
+}
+echo "</table>";
+
+echo "<h4>Tor-Statistik</h4>";
 echo "<table><tr><td width='100px'></td><td width='100px'>Tore</td><td width='100px'>Gegentore</td></tr>";
 echo "<tr><td>Anzahl</td><td>$wins_looses[2]</td><td>$wins_looses[3]</td></tr>"; 
 $toreGame = $wins_looses[2] / $nrGames;

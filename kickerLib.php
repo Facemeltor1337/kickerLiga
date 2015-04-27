@@ -226,62 +226,7 @@ function getTheSameGames($gameID)
 	return array($countGames, $ids);
 }
 
-function getFavPlayer($id)
-{
-	$sql_player1 = mysql_query("SELECT * FROM games where player_1='$id' or player_2='$id' or player1_1='$id' or player2_2='$id'");
-	$n = mysql_num_rows($sql_player1);
-	$temp = array();
-	for ($i=0;$i<$n;$i++)
-	{
-		$play1 = mysql_result($sql_player1,$i, "player_1");
-		$play1_1 = mysql_result($sql_player1,$i, "player1_1");
-		if ($play1_1 == 0)
-		{
-			continue;
-		}
-		$play2 = mysql_result($sql_player1,$i, "player_2");
-		$play2_2 = mysql_result($sql_player1,$i, "player2_2");
-		if ($play2_2 == 0)
-		{
-			continue;
-		}
-		if ($play1 == $id or $play1_1 == $id)
-		{
-			if ($play1== $id)
-			{
-				$temp[] = $play1_1;
-			}
-			else
-			{
-				$temp[] = $play1;
-			}
-		}
-		else
-		{
-			if ($play2== $id)
-			{
-				$temp[] = $play2_2;
-			}
-			else
-			{
-				$temp[] = $play2;
-			}
-		} 
-	}
-	$temp = array_count_values($temp);
-	$biggest = 0;
 
-	while (list($key, $value) = each($temp)) {
-    		if ($value > $biggest)
-		{
-			$biggest = $value;
-			$most = $key;
-			continue;
-		}		
-	}
-	return array(getPlayerNick($most), $most, $biggest);
-	
-}
 
 function getAbwehrSturm($id)
 {
@@ -397,11 +342,21 @@ function getTeams()
 			$play1_1 = mysql_result($sql_player1,$i, "player1_1");
             $play2 = mysql_result($sql_player1,$i, "player_2");
 			$play2_2 = mysql_result($sql_player1,$i, "player2_2");
-
+			$score1 = mysql_result($sql_player1,$i, "score1");
+			$score2 = mysql_result($sql_player1,$i, "score2");
 			if (sizeof($foo) == 0)
 			{
-				$foo[] = array($play1, $play1_1, 1);
-				$foo[] = array($play2, $play2_2, 1);
+				//player1, player2, games, won
+				if($score1 > $score2)
+				{
+					$foo[] = array($play1, $play1_1, 1, 1);
+					$foo[] = array($play2, $play2_2, 1, 0);
+				}
+				else
+				{
+					$foo[] = array($play1, $play1_1, 1, 0);
+					$foo[] = array($play2, $play2_2, 1, 1);
+				}
 				continue;
 			}		
 			$foundTeam = 0;
@@ -410,10 +365,19 @@ function getTeams()
 			{
 				if ($foo[$j][0] == $play1 and $foo[$j][1] == $play1_1)
 				{
+					//add one to games
 					$games =  $foo[$j];
 					$games = $games[2];
 					$games = $games + 1;
-					$foo[$j] = array($play1, $play1_1, $games);
+					//add wins now
+					$wins = $foo[$j];
+					$wins = $wins[3];
+					if ($score1 > $score2)
+					{
+						$wins = $wins +1 ;
+					}
+
+					$foo[$j] = array($play1, $play1_1, $games, $wins);
 					$foundTeam = 1;
 					break;
 				}
@@ -422,14 +386,31 @@ function getTeams()
 					$games =  $foo[$j];
 					$games = $games[2];
 					$games = $games + 1;
-					$foo[$j] = array($play1_1, $play1, $games);
+					//add wins now
+					$wins = $foo[$j];
+					$wins = $wins[3];
+					if ($score1 > $score2)
+					{
+						$wins = $wins +1 ;
+					}
+
+					$foo[$j] = array($play1_1, $play1, $games, $wins);
 					$foundTeam = 1;
 					break;
 				}
 			}//end team 1
 			if ($foundTeam == 0)
 			{
-					$foo[] = array($play1, $play1_1, 1);	
+
+					if ($score1 > $score2)
+					{
+						$wins = 1 ;
+					}
+					else
+					{
+						$wins = 0;
+					}
+					$foo[] = array($play1, $play1_1, 1, $wins);	
 
 			}
 			$foundTeam = 0;		
@@ -440,7 +421,14 @@ function getTeams()
 					$games =  $foo[$j];
 					$games = $games[2];
 					$games = $games + 1;
-					$foo[$j] = array($play2, $play2_2, $games);
+					//add wins now
+					$wins = $foo[$j];
+					$wins = $wins[3];
+					if ($score1 < $score2)
+					{
+						$wins = $wins +1 ;
+					}
+					$foo[$j] = array($play2, $play2_2, $games, $wins);
 					$foundTeam = 1;
 					$whichTeam = 2;
 					break;
@@ -450,7 +438,14 @@ function getTeams()
 					$games =  $foo[$j];
 					$games = $games[2];
 					$games = $games + 1;
-					$foo[$j] = array($play2_2, $play2, $games);
+					//add wins now
+					$wins = $foo[$j];
+					$wins = $wins[3];
+					if ($score1 < $score2)
+					{
+						$wins = $wins +1 ;
+					}
+					$foo[$j] = array($play2_2, $play2, $games, $wins);
 					$foundTeam = 1;
 					$whichTeam = 2;
 					break;
@@ -458,10 +453,17 @@ function getTeams()
 			}//end team2
 			if ($foundTeam == 0)
 			{
-				$foo[] = array($play2, $play2_2, 1);
-
+					if ($score1 < $score2)
+					{
+						$wins = 1 ;
+					}
+					else
+					{
+						$wins = 0;
+					}
+				$foo[] = array($play2, $play2_2, 1, $wins);
 			}			
-
+	
 	} //end games loop
 	
 	return $foo;
