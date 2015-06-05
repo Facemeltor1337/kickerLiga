@@ -323,8 +323,8 @@ function getLigaInfo($id)
 	$name = mysql_result($sql_player1,0, "name");
 	$text = mysql_result($sql_player1,0, "text");
 	$status = mysql_result($sql_player1,0, "status");
-	
-	return array($name, $text, $status);
+	$liga_modus = mysql_result($sql_player1, 0, "liga_modus");
+	return array($name, $text, $status, $liga_modus);
 }
 
 
