@@ -44,12 +44,15 @@ function getNumberOfGamesByPlayer($id)
 	return $n;
 }
 
-function getWinRatio($id)
+function getWinRatio($id) {
+	$win_loss_arrays = getAbwehrSturm($id);
+	return getWinRatioForArray($win_loss_arrays);
+}
+
+function getWinRatioForArray($a_s_nr)
 {
-	$wins_looses = getWinsAndLoose($id);
-	$overall = getNumberOfGamesByPlayer($id);
-	$a_s_nr = getAbwehrSturm($id);
-	$ratio = $wins_looses[0] / $overall * 100;
+	$overall = $a_s_nr[0][0] + $a_s_nr[1][0];
+	$ratio = ($a_s_nr[0][1] + $a_s_nr[1][1]) / $overall * 100;
 	$aratio = $a_s_nr[0][1] / $a_s_nr[0][0] * 100; 	
 	$sratio = $a_s_nr[1][1] / $a_s_nr[1][0] * 100;
 	return array(round($ratio, 2), round($aratio, 2), round($sratio, 2));
@@ -71,42 +74,39 @@ function getWinsAndLoose($id)
 	$loose = 0;
 	$goodGoals = 0;
 	$badGoals = 0;
-	for ($i=0;$i<$n;$i++)
-	{
-	$play1 = mysql_result($sql_player1,$i, "player_1");
-	$play1_1 = mysql_result($sql_player1,$i, "player1_1");
-	$play2 = mysql_result($sql_player1,$i, "player_2");
-	$play2_2 = mysql_result($sql_player1,$i, "player2_2");
-	$score1 = mysql_result($sql_player1,$i, "score1");
-	$score2 = mysql_result($sql_player1,$i, "score2");
-	if ($play1 == $id or $play1_1 == $id)
-	{
-		//if the player is in team 1, than add score 1 good and score2 badgoals
-		$goodGoals += $score1; 		
-		$badGoals += $score2;
+	for ($i=0; $i<$n; $i++) {
+		$score1 = mysql_result($sql_player1,$i, "score1");
+		$score2 = mysql_result($sql_player1,$i, "score2");
 		if ($score1 > $score2)
 		{
-			$win += 1;
-		}		
-		else
-		{
-			$loose +=1;
-		}
-	}
-	else
-	{
-		$goodGoals += $score2; 		
-		$badGoals += $score1;
-		if ($score1 < $score2)
-		{
-			$win += 1;
-		}		
-		else
-		{
-			$loose +=1;
-		}
-	}
-
+			//team 1 won check if player was on team 1
+			$play1 = mysql_result($sql_player1,$i, "player_1");
+			$play1_1 = mysql_result($sql_player1,$i, "player1_1");
+			
+			if ($play1 == $id || $play1_1 == $id) {
+				$goodGoals += $score1;
+				$badGoals += $score2;
+				$win += 1;
+			} else {
+				$goodGoals += $score2;
+				$badGoals += $score1;
+				$loose +=1;
+			}		
+		} else {
+			//team 2 won
+			$play2 = mysql_result($sql_player1,$i, "player_2");
+			$play2_2 = mysql_result($sql_player1,$i, "player2_2");
+			
+			if ($play2 == $id || $play2_2 == $id)	{
+				$goodGoals += $score2;
+				$badGoals += $score1;
+				$win +=1;
+			} else {
+				$goodGoals += $score1;
+				$badGoals += $score2;
+				$loose += 1;
+			}
+		}	
 	}
 	return array($win, $loose, $goodGoals, $badGoals);
 }
@@ -144,38 +144,31 @@ function getLast10($id)
 	$foo = array();
 	$sql_player1 = mysql_query("SELECT * FROM games where player_1='$id' or player_2='$id' or player1_1='$id' or player2_2='$id' order by date DESC");
 	$n = mysql_num_rows($sql_player1);
-	for ($i=0;$i<$n;$i++)
+	for ($i=0; $i < $n && $i < 10; $i++)
 	{
-	$play1 = mysql_result($sql_player1,$i, "player_1");
-	$play1_1 = mysql_result($sql_player1,$i, "player1_1");
-	$play2 = mysql_result($sql_player1,$i, "player_2");
-	$play2_2 = mysql_result($sql_player1,$i, "player2_2");
-	$score1 = mysql_result($sql_player1,$i, "score1");
-	$score2 = mysql_result($sql_player1,$i, "score2");
-	$temp = '';
-	if ($play1 == $id or $play1_1 == $id)
-	{
+		$score1 = mysql_result($sql_player1,$i, "score1");
+		$score2 = mysql_result($sql_player1,$i, "score2");
+		$temp = '';
 		if ($score1 > $score2)
 		{
-			$temp = 1;
-		}		
-		else
-		{
-			$temp =-1;
+			$play1 = mysql_result($sql_player1,$i, "player_1");
+			$play1_1 = mysql_result($sql_player1,$i, "player1_1");
+			if ($play1 == $id or $play1_1 == $id) {
+				$temp = 1;
+			} else {
+				$temp = -1;
+			}
+		} else {
+			$play2 = mysql_result($sql_player1,$i, "player_2");
+			$play2_2 = mysql_result($sql_player1,$i, "player2_2");
+			if ($play2 == $id or $play2_2 == $id) {
+				$temp = 1;
+			} else {
+				$temp = -1;
+			}
 		}
-	}
-	else
-	{
-		if ($score1 < $score2)
-		{
-			$temp = 1;
-		}		
-		else
-		{
-			$temp =-1;
-		}
-	}
-	$foo[] = $temp;
+	
+		$foo[] = $temp;
 	}
 	return $foo;
 }
@@ -188,7 +181,7 @@ function getTheSameGames($gameID)
 	$player2 = $data[5];
 	$player2_2 = $data[6];
 	//look for games with team1
-	$sql_team1 = mysql_query("SELECT * FROM games where 
+	$sql_team1 = mysql_query("SELECT id FROM games where(
 				(player_1='$player1' and player1_1='$player1_1')
 				or 
 				(player_1='$player1_1' and player1_1='$player1')
@@ -196,124 +189,55 @@ function getTheSameGames($gameID)
 				(player_2='$player1' and player2_2='$player1_1')
 				or				
 				(player_2='$player1_1' and player2_2='$player1')
-				Order by date DESC");
-	$sql_team2 = mysql_query("SELECT * FROM games where 
-				(player_1='$player2' and player1_1='$player2_2')
-				or 
-				(player_1='$player2_2' and player1_1='$player2')
-				or
-				(player_2='$player2' and player2_2='$player2_2')
-				or				
-				(player_2='$player2_2' and player2_2='$player2')
-				Order by date DESC");
-	$gamesTeam1 = mysql_num_rows($sql_team1);
-	$gamesTeam2 = mysql_num_rows($sql_team2);
-	$countGames = 0;
+			)
+			AND id IN
+				(SELECT id FROM games where 
+					(player_1='$player2' and player1_1='$player2_2')
+					or 
+					(player_1='$player2_2' and player1_1='$player2')
+					or
+					(player_2='$player2' and player2_2='$player2_2')
+					or				
+					(player_2='$player2_2' and player2_2='$player2')
+				)
+
+			Order by date DESC");
+	$countGames = mysql_num_rows($sql_team1);
+	
 	$ids = array();
-	for($i=0;$i<$gamesTeam1;$i++)
-	{
-		for($j=0;$j<$gamesTeam2;$j++)
-		{
-			$id1 = mysql_result($sql_team1,$i, "id");
-			$id2 = mysql_result($sql_team2,$j, "id"); 
-			if (($id1 == $id2) and ($id1 != $gameID or $id2 != $gameID))
-			{
-				$countGames += 1;
-				$ids[] = $id1;
-			}
+	for($i=0; $i < $countGames; $i++) {
+		$id1 = mysql_result($sql_team1,$i, "id");
+		if ($id1 != $gameID) {
+			$ids[] = $id1;
 		}
 	}
 	return array($countGames, $ids);
 }
 
 
-
+/**
+ * 
+ * @param unknown $id Id des Spielers
+ * @return [[abwehrspiele, abwehrsiege, abwehrniederlagen],[sturmspiele, sturmsiege, sturmniederlagen]]
+ */
 function getAbwehrSturm($id)
 {
-	$sql_player1 = mysql_query("SELECT * FROM games where player_1='$id' or player_2='$id' or player1_1='$id' or player2_2='$id'");
-	$n = mysql_num_rows($sql_player1);
-	$sturm = 0;
-	$abwehr = 0;
-	$awins = 0;
-	$swins = 0;
-	$aloose = 0;
-	$sloose = 0;
-	for ($i=0;$i<$n;$i++)
-	{
-	$play1 = mysql_result($sql_player1,$i, "player_1");
-	$play1_1 = mysql_result($sql_player1,$i, "player1_1");
-	$play2 = mysql_result($sql_player1,$i, "player_2");
-	$play2_2 = mysql_result($sql_player1,$i, "player2_2");
-	$score1 = mysql_result($sql_player1,$i, "score1");
-	$score2 = mysql_result($sql_player1,$i, "score2");
-	//plays allone
-	if ($id == $play1 and $play1_1 == 0)
-	{
-		//do nothing
-		continue;
-	}
-	if ($id == $play2 and $play2_2 == 0)
-	{
-		//do nothing
-		continue;
-	}
-	//plays Defense
-	if ($id == $play1)
-	{
-		$abwehr += 1;
-		if ($score1 > $score2)
-		{
-			$awins += 1;
-		}		
-		else
-		{
-			$aloose +=1;
-		}
-		continue;
-	}
-	if ($id == $play2)
-	{
-		$abwehr += 1;
-		if ($score2 > $score1)
-		{
-			$awins += 1;
-		}		
-		else
-		{
-			$aloose +=1;
-		}
-		continue;
-	}
-	//plays Forward
-	if ($id == $play1_1)
-	{
-		//do nothing
-		$sturm += 1;
-		if ($score1 > $score2)
-		{
-			$swins += 1;
-		}		
-		else
-		{
-			$sloose +=1;
-		}
-		continue;
-	}
-	if ($id = $play2_2)
-	{
-		//do nothing
-		$sturm += 1;
-		if ($score2 > $score1)
-		{
-			$swins += 1;
-		}		
-		else
-		{
-			$sloose +=1;
-		}
-		continue;
-	}
-	}
+	$sql_defense_wins = mysql_query("SELECT id FROM games where (player_1='$id' AND player1_1!='0' AND score1 > score2)
+			OR (player_2='$id' AND player2_2!='0' AND score2 > score1)");
+	$sql_defense_losses = mysql_query("SELECT id FROM games where (player_1='$id' AND player1_1!='0' AND score1 < score2)
+			OR (player_2='$id' AND player2_2!='0' AND score2 < score1)");
+	$sql_forward_wins = mysql_query("SELECT id FROM games where (player1_1='$id' AND player_1!='0' AND score1 > score2)
+			OR (player2_2='$id' AND player_2!='0' AND score2 > score1)");
+	$sql_forward_losses = mysql_query("SELECT id FROM games where (player1_1='$id' AND player_1!='0' AND score1 < score2)
+			OR (player2_2='$id' AND player_2!='0' AND score2 < score1)");
+
+	$aloose = mysql_num_rows($sql_defense_losses);
+	$sloose = mysql_num_rows($sql_forward_losses);
+	$awins = mysql_num_rows($sql_defense_wins);
+	$swins = mysql_num_rows($sql_forward_wins);
+	$sturm = $sloose + $swins;
+	$abwehr = $aloose + $awins;
+
 	return array(array($abwehr, $awins, $aloose), array($sturm, $swins, $sloose));
 }
 
