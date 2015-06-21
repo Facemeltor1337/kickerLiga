@@ -86,11 +86,19 @@ var myLineChart = new Chart(ctx2).Line(
 echo "<div id='main'>";
 echo "<h1>Spieler: $nickname</h1>";
 echo "<h4>Spielstatistik</h4><table><tr><td width='100px'></td><td width='100px'>Gesamt</td><td width='100px'>Abwehr</td><td width='100px'>Sturm</td></tr>";
-$ratio = getWinRatio($playerID);
+
 $temp = getAbwehrSturm($playerID);
+$ratio = getWinRatioForArray($temp);
+$gesamt_niederlagen = $temp[0][2] + $temp[1][2];
+$gesamt_siege = $temp[0][1] + $temp[1][1];
 $abwehr = $temp[0][0];
+$abwehr_niederlage = $temp[0][2];
+$abwehr_sieg = $temp[0][1];
 $sturm = $temp[1][0];
+$sturm_niederlage = $temp[1][2];
+$sturm_sieg = $temp[1][1];
 echo "<tr><td>Spiele</td><td>$nrGames</td><td>$abwehr</td><td>$sturm</td></tr>";
+echo "<tr><td>Spieleverh&auml;ltnis</td><td>$gesamt_siege / $gesamt_niederlagen</td><td> $abwehr_sieg / $abwehr_niederlage </td><td>$sturm_sieg / $sturm_niederlage </td></tr>";
 echo "<tr><td>Spiegquote</td><td>$ratio[0] %</td><td>$ratio[1] %</td><td>$ratio[2] %</td></tr>";
 echo "</table>";
 echo "<h3>Team-Statistiken</h3>";
