@@ -30,6 +30,20 @@ function getPlayerNick($id)
 	return $nick;
 }
 
+function checkAvatar($name)
+{
+	$default = 'default.png';
+	$files = scandir('img/avatare');
+	for ($i=0; $i<sizeof($files); $i++) {
+		$temp = pathinfo($files[$i])['filename'];
+		if ($temp == $name)
+		{
+			return $files[$i];
+		}
+	}
+	return $default;
+}
+
 function getPlayerID($name)
 {
 	$sql_player1 = mysql_query("SELECT * FROM players where Nickname='$name'");

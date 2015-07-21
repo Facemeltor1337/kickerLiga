@@ -17,6 +17,7 @@ $nickname = getPlayerNick($playerID);
 $nrGames = getNumberOfGamesByPlayer($playerID);
 $wins_looses = getWinsAndLoose($playerID);
 
+
 //generate a string for last 10
 $data_last10 = getLast10($playerID);
 $last10 = '[';
@@ -83,10 +84,11 @@ var myLineChart = new Chart(ctx2).Line(
 
 };</script>
 <?php
+$avatar = checkAvatar($nickname);
 echo "<div id='main'>";
+echo "<div id='ava'><img width='90' src='img/avatare/$avatar'></div>";
 echo "<h1>Spieler: $nickname</h1>";
 echo "<h4>Spielstatistik</h4><table><tr><td width='100px'></td><td width='100px'>Gesamt</td><td width='100px'>Abwehr</td><td width='100px'>Sturm</td></tr>";
-
 $temp = getAbwehrSturm($playerID);
 $ratio = getWinRatioForArray($temp);
 $gesamt_niederlagen = $temp[0][2] + $temp[1][2];

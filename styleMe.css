@@ -22,6 +22,12 @@ a:hover {
     background-color: #ed8b00;
     font-size: 30px;
 }
+
+#ava {
+	position: absolute;
+	left: 40%;
+}
+
 #footer {
     clear: both;
 }
