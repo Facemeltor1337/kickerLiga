@@ -90,16 +90,24 @@ for($i=0;$i<$n;$i++)
 echo "</select><br>";
 if ($temp[2] == 0) //nur wenn Konfigphase
 {
+	//spieler holen
+	$currentPlayers = getPlayerInLiga($ligaID);
+	
 	echo "Spieler:";
 	
 	$sql_player = mysql_query("SELECT * FROM players");
 	$n = mysql_num_rows($sql_player);
-	echo "<select name='player' multiple $dis_orNot size='$n'>";
+	echo "<select name='player[]' multiple $dis_orNot size='$n'>";
 	for($i=0;$i<$n;$i++)
 	{
 		$pName = mysql_result($sql_player,$i, "Nickname");
 		$pID = mysql_result($sql_player,$i, "id");
-		echo "<option value='$pID'>$pName</option>";
+		$selected = '';
+		if (in_array("$pID", $currentPlayers))
+		{
+			$selected = "selected";
+		}
+		echo "<option value='$pID' $selected>$pName</option>";
 	}
 echo "</select><br>";
 echo "<input type='submit' value='Konfigurieren'>";
@@ -139,6 +147,32 @@ if ($func == 'konf')
 	//Update now the Konf
 	$sql_modus = mysql_query("UPDATE liga SET liga_modus='$modus' where id='$ligaID'")or die(mysql_error());;
 	
+	//add the fucking players
+	$players = $_POST['player'];
+	foreach($players as $playerID) 
+	{
+		//check if players is already in the db
+		$sql_player1 = mysql_query("SELECT player FROM rel_liga_player where playerID = '$playerID' and ligaID='$ligaID'");
+		if (mysql_num_rows($sql_player1) == 0)
+		{
+			$sql123 = mysql_query("INSERT INTO rel_liga_player (playerID, ligaID) VALUES('$playerID', '$ligaID')") or die (mysql_error());
+		}
+	}
+	//check now if we have to remove a player, because it is not selected anymore
+	$dbPlayers = getPlayerInLiga($ligaID);
+	for($i=0;$i<sizeof($dbPlayers);$i++)
+	{
+		$tempPlayer =$dbPlayers[$i];
+		
+		if(in_array($tempPlayer , $players))
+		{
+			//everything ok
+		}
+		else {
+			//lets kick the player
+			$sql123 = mysql_query("DELETE FROM rel_liga_player WHERE playerID = '$tempPlayer' and ligaID = '$ligaID'");
+		}
+	}
 	echo "<script type=\"text/javascript\">window.location.href = 'liga_details.php?id=$ligaID'</script>";
 }//end $func = konf
 // footer

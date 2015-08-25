@@ -265,6 +265,19 @@ function getLigaInfo($id)
 	return array($name, $text, $status, $liga_modus);
 }
 
+function getPlayerInLiga($ligaID)
+{
+	$sql_players = mysql_query("SELECT playerID FROM rel_liga_player where ligaID='$ligaID'");
+	$player = array();
+	$playerCounter = mysql_num_rows($sql_players);
+	for($i=0;$i<$playerCounter;$i++)
+	{
+		$id = mysql_result($sql_players,$i, "playerID");
+		$player[] = $id;
+	}
+	return $player;
+}
+
 
 //get all teams now
 function getTeams()
@@ -273,7 +286,7 @@ function getTeams()
 	$foo = array();
 	
 	$sql_player1 = mysql_query("SELECT * FROM games");
-	$n = mysql_num_rows($sql_player1);		
+	$n = mysql_num_rows($sql_player1);
 	for($i=0;$i<$n;$i++)
 	{
 			$play1 = mysql_result($sql_player1,$i, "player_1");
