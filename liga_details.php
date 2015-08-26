@@ -27,6 +27,7 @@ $flagsTL[3] = "Diese Spielrunde ist gestartet und aktuell werden die Spiele der 
 // header
 include ('header.php');
 include ('kickerLib.php');
+echo '<script src="dynamic.js"></script>'; 
 //get GET
 if (isset($_POST['func'])) {
 	$func = $_POST['func'];
@@ -74,10 +75,13 @@ for($i=0;$i<$n;$i++)
 {
 	$myModus = mysql_result($sql_modus,$i, "name");
 	$myID = mysql_result($sql_modus,$i, "id");
-	
+		
 	if ($myID == $temp[3])
 	{
 		$selected = 'selected';
+		$loadMinTeilnehmer = mysql_result($sql_modus,$i, "min_teilnehmer");
+		$loadMaxTeilnehmer = mysql_result($sql_modus,$i, "max_teilnehmer");
+	
 	}
 	else
 	{
@@ -90,33 +94,32 @@ for($i=0;$i<$n;$i++)
 echo "</select><br>";
 if ($temp[2] == 0) //nur wenn Konfigphase
 {
-	//spieler holen
-	$currentPlayers = getPlayerInLiga($ligaID);
-	
+	echo "<div id='correctPlayers' style='left:500px;position:absolute;'>foo</div>";
 	echo "Spieler:";
 	
 	$sql_player = mysql_query("SELECT * FROM players");
 	$n = mysql_num_rows($sql_player);
-	echo "<select name='player[]' multiple $dis_orNot size='$n'>";
+	echo "<select name='player[]' multiple $dis_orNot size='$n' onChange='countSelections($loadMinTeilnehmer, $loadMaxTeilnehmer)' id='player'>";
+
 	for($i=0;$i<$n;$i++)
 	{
 		$pName = mysql_result($sql_player,$i, "Nickname");
 		$pID = mysql_result($sql_player,$i, "id");
-		$selected = '';
-		if (in_array("$pID", $currentPlayers))
-		{
-			$selected = "selected";
-		}
-		echo "<option value='$pID' $selected>$pName</option>";
+		echo "<option value='$pID'>$pName</option>";
 	}
 echo "</select><br>";
-echo "<input type='submit' value='Konfigurieren'>";
+echo "<input type='submit' value='Konfigurieren' disabled id='konfButton'>";
+echo '<script type="text/javascript">';
+echo "countSelections($loadMinTeilnehmer, $loadMaxTeilnehmer)";
+echo '</script>';
 }
+
 echo "</div>";
 
 
 //content for rightSide
 echo "<div id='rightSide'>";
+
 echo "<div id='ligaInfo'><img src='img/flag-$status.png'><b>$status_text</b>";
 echo "<br>$status_ltext<br>";
 echo "</div>";
@@ -143,6 +146,12 @@ echo "</div>"; //end rightSide
 } // end $func = ''
 if ($func == 'konf')
 {
+	//TODO hier muss nun die berechnung der Teams rein und der Aufgabe der Spielstart seite
+	//1. Setzen des Status auf Laufend
+	//2. Berechnen der Teams
+?>
+
+<?php 
 	$modus = $_POST['modus'];
 	//Update now the Konf
 	$sql_modus = mysql_query("UPDATE liga SET liga_modus='$modus' where id='$ligaID'")or die(mysql_error());;
@@ -158,21 +167,7 @@ if ($func == 'konf')
 			$sql123 = mysql_query("INSERT INTO rel_liga_player (playerID, ligaID) VALUES('$playerID', '$ligaID')") or die (mysql_error());
 		}
 	}
-	//check now if we have to remove a player, because it is not selected anymore
-	$dbPlayers = getPlayerInLiga($ligaID);
-	for($i=0;$i<sizeof($dbPlayers);$i++)
-	{
-		$tempPlayer =$dbPlayers[$i];
-		
-		if(in_array($tempPlayer , $players))
-		{
-			//everything ok
-		}
-		else {
-			//lets kick the player
-			$sql123 = mysql_query("DELETE FROM rel_liga_player WHERE playerID = '$tempPlayer' and ligaID = '$ligaID'");
-		}
-	}
+
 	echo "<script type=\"text/javascript\">window.location.href = 'liga_details.php?id=$ligaID'</script>";
 }//end $func = konf
 // footer
