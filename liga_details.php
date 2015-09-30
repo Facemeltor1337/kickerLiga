@@ -129,6 +129,8 @@ if ($temp[2] == 1 or $temp[2] == 2 or$temp[2] == 3)
 	//TODO: Reiter für Spiele, Tabelle, Playoffs
 	echo '<div class="tabpage" id="tabpage_1">';
 	echo "<h1>Paarungen</h1>";
+	// we need now an dict with all teams
+	$sql_ligagames = mysql_query("SELECT * FROM ");
 	$sql_ligagames = mysql_query("SELECT * FROM games_liga where ligaID = '$ligaID' and playOff is NULL");
 	$n = mysql_num_rows($sql_ligagames);
 	echo "<table><tr class='tablehead'><td colspan='2' width='300px'>Team 1</td><td width='130px'>Ergebnis</td><td colspan='2' width='300px'>Team 2</td></tr>";
@@ -196,6 +198,7 @@ if ($temp[2] == 1 or $temp[2] == 2 or$temp[2] == 3)
 		else
 		{
 			echo "<td><div class='number'>$score1</div>  : <div class='number'>$score2</div> </td>";
+
 		}
 		$sql_team2 = mysql_query("SELECT * FROM rel_liga_player where ligaID = '$ligaID' and team = '$team2'");
 		$m = mysql_num_rows($sql_team2);
@@ -211,13 +214,71 @@ if ($temp[2] == 1 or $temp[2] == 2 or$temp[2] == 3)
 	echo "</table></div>";
 	echo '<div class="tabpage" id="tabpage_3">';
 	echo "<h1>PlayOffs</h1>";
-	//TODO: eifügen der Playoff-Spiele - zuerst jedoch anlegen in add_game_liga.php
+	//TODO: einfügen der Playoff-Spiele - zuerst jedoch anlegen in add_game_liga.php
 	echo "</div>";
 	echo '<div class="tabpage" id="tabpage_2">';
 	echo "<h1>Tabelle</h1>";
+	$sql_team2 = mysql_query("SELECT team FROM rel_liga_player where ligaID = '$ligaID' order by team DESC LIMIT 1");
+	$c_team = mysql_result($sql_team2,0, "team");
+	$teams_wins = array();
+	$teams_goalsPro = array();
+	$teams_lose = array();
+	$teams_goalsCon = array();
+
+	for ($j=0;$j<=$c_team;$j++)
+	{
+		$teams_wins[$j] = 0;
+		$sql_wins = mysql_query("SELECT count(id) as countGames, SUM(score1) as sum_scorePro, SUM(score2) as sum_scoreCon FROM games_liga where (team1='$j' AND score1 > score2) AND ligaID = '$ligaID' AND score1 is not NULL and playOff is NULL");
+		$teams_wins[$j] += mysql_result($sql_wins,0, "countGames");
+		$teams_goalsPro[$j] += mysql_result($sql_wins,0, "sum_scorePro");
+		$teams_goalsCon[$j] += mysql_result($sql_wins,0, "sum_scoreCon");
+		$sql_wins = mysql_query("SELECT count(id) as countGames, SUM(score2) as sum_scorePro, SUM(score1) as sum_scoreCon FROM games_liga where (team2='$j' AND score1 < score2) AND ligaID = '$ligaID' AND score1 is not NULL and playOff is NULL");
+		$teams_goalsPro[$j] += mysql_result($sql_wins,0, "sum_scorePro");
+		$teams_goalsCon[$j] += mysql_result($sql_wins,0, "sum_scoreCon");
+		$teams_wins[$j] += mysql_result($sql_wins,0, "countGames");
+						
+		$sql_lose = mysql_query("SELECT count(id) as countGames, SUM(score1) as sum_scorePro, SUM(score2) as sum_scoreCon FROM games_liga where (team1='$j' AND score1 < score2) AND ligaID = '$ligaID' AND score1 is not NULL and playOff is NULL");
+		$teams_lose[$j] += mysql_result($sql_lose,0, "countGames");
+		$teams_goalsPro[$j] += mysql_result($sql_lose,0, "sum_scorePro");
+		$teams_goalsCon[$j] += mysql_result($sql_lose,0, "sum_scoreCon");
+		$sql_lose = mysql_query("SELECT count(id) as countGames, SUM(score2) as sum_scorePro, SUM(score1) as sum_scoreCon FROM games_liga where (team2='$j' AND score1 > score2) AND ligaID = '$ligaID' AND score1 is not NULL and playOff is NULL");
+		$teams_lose[$j] += mysql_result($sql_lose,0, "countGames");
+		$teams_goalsPro[$j] += mysql_result($sql_lose,0, "sum_scorePro");
+		$teams_goalsCon[$j] += mysql_result($sql_lose,0, "sum_scoreCon");
+		
+	}
+	$values = array_values($teams_wins);
+	$values = array_unique($values);
+	arsort($values);
+	foreach($values as $key => $val)
+	{
+		$teamsWithValue = array_keys($teams_wins, $val);
+		if(count($teamsWithValue) == 1)
+		{
+			$currentTeam = $teamsWithValue[0];
+			$dif = $teams_goalsPro[$currentTeam] - $teams_goalsCon[$currentTeam];
+			echo "Team: $currentTeam | Wins: $val | Lose: $teams_lose[$currentTeam] | GoalsPro: $teams_goalsPro[$currentTeam] | GoalsCon: $teams_goalsCon[$currentTeam] | Dif: $dif<br>";
+		}
+		else {
+			//neue Liste bauen für Tor Dif
+			foreach($teamsWithValue as $somethingKey => $curTeam)
+			{
+				$newTeams[$curTeam] = $teams_goalsPro[$curTeam] - $teams_goalsCon[$curTeam];
+			}
+			arsort($newTeams);
+			foreach($newTeams as $curTeam => $curDif)
+			{
+				$currentTeam = $curTeam;
+				$dif = $teams_goalsPro[$currentTeam] - $teams_goalsCon[$currentTeam];
+				echo "Team: $currentTeam | Wins: $val | Lose: $teams_lose[$currentTeam] | GoalsPro: $teams_goalsPro[$currentTeam] | GoalsCon: $teams_goalsCon[$currentTeam] | Dif: $dif<br>";
+			}
+		}
+		
+	}
+
+
 	echo "</div>";
 	
-	//TODO: anlegen einer 
 	
 }
 echo "</div></div></div>";
