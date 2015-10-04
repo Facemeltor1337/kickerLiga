@@ -1,3 +1,5 @@
+<script type="text/javascript" src="validation.js">
+</script>
 <?php
 // config files
 include ('config.php');
@@ -21,16 +23,21 @@ else
 if ($status != 'add')
 {
 echo "<div id='main'>";
+echo "<div id='errors' style='font-size: 16px;background-color: #ED8B00;padding-left: 2em'></div>";
 echo "<h1>Ein Spiel hinzufügen:</h1>";
 //Hole nun die Daten der Spieler
 $nrPlayer = getNumberOfPlayer();
 ?>
+<script type="text/javascript">
+// pass PHP variable declared above to JavaScript variable
+var possiblePlayers = <?php echo json_encode(listPlayerAsPureList()) ?>;
+</script>
 	<datalist id="PlayerIDs">
 		<?php 
 		listPlayerAsList();
 		?>
 	</datalist>
-    <form action='add_game.php' method='post'>
+    <form name='spielEintrag' action='add_game.php' onsubmit="return validateInput(possiblePlayers)" method='post'>
        <input name='status' value='add' type='hidden'>
        <fieldset>
           <legend>Team1</legend>
@@ -41,17 +48,17 @@ $nrPlayer = getNumberOfPlayer();
              <input type="text" name="t1s2" list="PlayerIDs" size='20' required>
 	     <label>Tore</label>
              <select name = "t1score" required>
- 		<option value="0">0</option>
- 		<option value="1">1</option>
-		<option value="2">2</option>
-		<option value="3">3</option>
-		<option value="4">4</option>
-		<option value="5">5</option>
-		<option value="6">6</option>
-		<option value="7">7</option>
-		<option value="8">8</option>
-		<option value="9">9</option>
-		<option value="10">10</option>
+		 		<option value="0">0</option>
+		 		<option value="1">1</option>
+				<option value="2">2</option>
+				<option value="3">3</option>
+				<option value="4">4</option>
+				<option value="5">5</option>
+				<option value="6">6</option>
+				<option value="7">7</option>
+				<option value="8">8</option>
+				<option value="9">9</option>
+				<option value="10">10</option>
              </select>
           </p>
        </fieldset>
@@ -64,17 +71,17 @@ $nrPlayer = getNumberOfPlayer();
              <input type="text" name="t2s2" list="PlayerIDs" size='20' required>
 	     <label>Tore</label>
              <select name = "t2score"required>
- 		<option value="0">0</option>
- 		<option value="1">1</option>
-		<option value="2">2</option>
-		<option value="3">3</option>
-		<option value="4">4</option>
-		<option value="5">5</option>
-		<option value="6">6</option>
-		<option value="7">7</option>
-		<option value="8">8</option>
-		<option value="9">9</option>
-		<option value="10">10</option>
+		 		<option value="0">0</option>
+		 		<option value="1">1</option>
+				<option value="2">2</option>
+				<option value="3">3</option>
+				<option value="4">4</option>
+				<option value="5">5</option>
+				<option value="6">6</option>
+				<option value="7">7</option>
+				<option value="8">8</option>
+				<option value="9">9</option>
+				<option value="10">10</option>
              </select>
           </p>
        </fieldset>

@@ -23,6 +23,11 @@ a:hover {
     font-size: 30px;
 }
 
+#errors {
+    background-color: #ed8b00;
+    font-size: 14px;
+}
+
 #ava {
 	position: absolute;
 	left: 40%;

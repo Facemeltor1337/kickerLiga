@@ -153,6 +153,20 @@ function listPlayerAsList()
 	}
 }
 
+function listPlayerAsPureList()
+{
+	$sql_te = mysql_query("SELECT id FROM players");
+	$check_name = mysql_num_rows($sql_te);
+
+	for ($i=0;$i<$check_name;$i++)
+	{
+		$v_id_sel = mysql_result($sql_te,$i, "id");
+		$v_name_sel = getPlayerNick($v_id_sel);
+		$output[] = $v_name_sel;
+	}
+	return $output;
+}
+
 function getLast10($id)
 {
 	$foo = array();
@@ -270,7 +284,7 @@ function getPlayerInLiga($ligaID)
 	$sql_players = mysql_query("SELECT playerID FROM rel_liga_player where ligaID='$ligaID'");
 	$player = array();
 	$playerCounter = mysql_num_rows($sql_players);
-	for($i=0;$i<$playerCounter;$i++)
+	for($i=0;$i<$playaerCounter;$i++)
 	{
 		$id = mysql_result($sql_players,$i, "playerID");
 		$player[] = $id;
@@ -422,7 +436,37 @@ function getTeams()
 	return $foo;
 }
 
+//do not use yet --> function will be interesting upon reaching a higher game count
+function getTeamsSQL()
+{
+	$foo = array();
 
+	$sql_num_players = mysql_query("SELECT * FROM players");
+	$n = mysql_num_rows($sql_num_players);
+	for($i=0;$i<$n;$i++)
+	{
+		for($j=$i+1;$j<=$n;$j++)
+		{
+			$wins_team1_sql = mysql_query("SELECT count(id) as totGames, SUM(score1) as posScore, SUM(score2) as negScore FROM games WHERE ((player_1='+$i+' AND player1_1='+$j+') OR (player_1='+$j+' AND player1_1='+$i+')) AND score1 > score2");
+			$losses_team1_sql =	mysql_query("SELECT count(id) as totGames, SUM(score1) as posScore, SUM(score2) as negScore FROM games WHERE ((player_1='+$i+' AND player1_1='+$j+') OR (player_1='+$j+' AND player1_1='+$i+')) AND score1 < score2");
+			$wins_team2_sql = mysql_query("SELECT count(id) as totGames, SUM(score2) as posScore, SUM(score1) as negScore FROM games WHERE ((player_2='+$i+' AND player2_2='+$j+') OR (player_2='+$j+' AND player2_2='+$i+')) AND score1 < score2");
+			$losses_team2_sql =	mysql_query("SELECT count(id) as totGames, SUM(score2) as posScore, SUM(score1) as negScore FROM games WHERE ((player_2='+$i+' AND player2_2='+$j+') OR (player_2='+$j+' AND player2_2='+$i+')) AND score1 > score2");
+		
+			$games_won = mysql_result($wins_team1_sql,0, "totGames") + mysql_result($wins_team2_sql,0, "totGames");
+			$games_lost = mysql_result($losses_team1_sql,0, "totGames") + mysql_result($losses_team2_sql,0, "totGames");
+			$goals_shot = mysql_result($wins_team1_sql,0, "posScore") + mysql_result($wins_team2_sql,0, "posScore") + 
+								mysql_result($losses_team1_sql,0, "posScore") + mysql_result($losses_team2_sql,0, "posScore");
+			$goals_received = mysql_result($wins_team1_sql,0, "negScore") + mysql_result($wins_team2_sql,0, "negScore") +
+								mysql_result($losses_team1_sql,0, "negScore") + mysql_result($losses_team2_sql,0, "negScore");
+
+			if (($games_lost + $games_won) > 0)
+			{
+				$foo[sizeof($foo)] = array($i, $j, $games_lost + $games_won, $games_won);
+			}
+		}
+	}
+	return $foo;
+}
 
 
 ?>
