@@ -284,7 +284,7 @@ function getPlayerInLiga($ligaID)
 	$sql_players = mysql_query("SELECT playerID FROM rel_liga_player where ligaID='$ligaID'");
 	$player = array();
 	$playerCounter = mysql_num_rows($sql_players);
-	for($i=0;$i<$playaerCounter;$i++)
+	for($i=0;$i<$playerCounter;$i++)
 	{
 		$id = mysql_result($sql_players,$i, "playerID");
 		$player[] = $id;
