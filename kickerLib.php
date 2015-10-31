@@ -443,10 +443,12 @@ function getTeamsSQL()
 
 	$sql_num_players = mysql_query("SELECT * FROM players");
 	$n = mysql_num_rows($sql_num_players);
-	for($i=0;$i<$n;$i++)
+	for($iLoop=0;$iLoop<$n-1;$iLoop++)
 	{
-		for($j=$i+1;$j<=$n;$j++)
+		$i = mysql_result($sql_num_players,$iLoop, "id");
+		for($jLoop=$iLoop+1;$jLoop<$n;$jLoop++)
 		{
+			$j = mysql_result($sql_num_players,$jLoop, "id");
 			$wins_team1_sql = mysql_query("SELECT count(id) as totGames, SUM(score1) as posScore, SUM(score2) as negScore FROM games WHERE ((player_1='+$i+' AND player1_1='+$j+') OR (player_1='+$j+' AND player1_1='+$i+')) AND score1 > score2");
 			$losses_team1_sql =	mysql_query("SELECT count(id) as totGames, SUM(score1) as posScore, SUM(score2) as negScore FROM games WHERE ((player_1='+$i+' AND player1_1='+$j+') OR (player_1='+$j+' AND player1_1='+$i+')) AND score1 < score2");
 			$wins_team2_sql = mysql_query("SELECT count(id) as totGames, SUM(score2) as posScore, SUM(score1) as negScore FROM games WHERE ((player_2='+$i+' AND player2_2='+$j+') OR (player_2='+$j+' AND player2_2='+$i+')) AND score1 < score2");

@@ -38,7 +38,7 @@ function checkScore() {
 	var goalDifference = Math.abs(scoreTeam1-scoreTeam2);
 	
 	if(scoreTeam1 != scoreTeam2){
-		totalScore = scoreTeam1 + scoreTeam2; 
+		totalScore = parseInt(scoreTeam1) + parseInt(scoreTeam2); 
 		if(scoreTeam1==10 || scoreTeam2==10){
 			return (totalScore == 19) || (totalScore==18);
 		}else{
